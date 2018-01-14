@@ -14,7 +14,7 @@ import com.cashmeoutside.mybudget.entities.Account;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.AccountHolder>{
+public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.AccountViewHolder>{
 
     private List<Account> mAccounts = new ArrayList<>();
 
@@ -23,14 +23,14 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
     }
 
     @Override
-    public AccountHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AccountViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cardview_account, parent, false);
-        return new AccountHolder(v);
+        return new AccountViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(AccountHolder holder, int position) {
+    public void onBindViewHolder(AccountViewHolder holder, int position) {
         holder.getBinding().setVariable(BR.account, mAccounts.get(position));
         holder.getBinding().executePendingBindings();
     }
@@ -40,11 +40,11 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
         return mAccounts.size();
     }
 
-    public class AccountHolder extends RecyclerView.ViewHolder{
+    public class AccountViewHolder extends RecyclerView.ViewHolder{
 
         private ViewDataBinding binding;
 
-        public AccountHolder(View view){
+        public AccountViewHolder(View view){
             super(view);
             binding = DataBindingUtil.bind(view);
         }

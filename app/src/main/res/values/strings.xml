@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">My Budget</string>
+    <string name="spinner_type">Test</string>
+
 </resources>
