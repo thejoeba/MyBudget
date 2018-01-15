@@ -24,8 +24,8 @@ public class AccountsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accounts);
 
-        accounts.add(new Account("Cabrillo CU - Checking", "19182180", 0, Account.AccountTypeEnum.CHECKING.toString()));
-        accounts.add(new Account("Cabrillo CU - Savings", "19182181", 0, Account.AccountTypeEnum.SAVINGS.toString()));
+        accounts.add(new Account(0,"Cabrillo CU - Checking", "19182180", 0, Account.AccountTypeEnum.CHECKING.toString()));
+        accounts.add(new Account(0, "Cabrillo CU - Savings", "19182181", 0, Account.AccountTypeEnum.SAVINGS.toString()));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView rvAccounts = findViewById(R.id.rvAccounts);
@@ -50,7 +50,7 @@ public class AccountsActivity extends AppCompatActivity {
                 String result = data.getStringExtra("result");
                 String[] results = result.split(",");
                 Double balance = Double.parseDouble(results[2]);
-                accounts.add(new Account(results[0], results[1], balance, results[3]));
+                accounts.add(new Account(0, results[0], results[1], balance, results[3]));
 
                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
                 RecyclerView rvAccounts = findViewById(R.id.rvAccounts);

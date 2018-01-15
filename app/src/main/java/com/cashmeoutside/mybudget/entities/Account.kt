@@ -11,20 +11,6 @@ data class Account(
         var balance: Double,
         var accountType: String
 ) {
-
-//    @Id var id: Long = 0
-//    var name = ""
-//    var accountNumber = ""
-//    var balance = 0.toDouble()
-//    var accountType = ""
-//
-//    constructor(name: String, accountNumber: String, balance: Double, accountType: String) : this {
-//        this.name = name
-//        this.accountNumber = accountNumber
-//        this.balance = balance
-//        this.accountType = accountType
-//    }
-
     enum class AccountTypeEnum constructor(private val mName: String) {
         CHECKING("Checking"),
         SAVINGS("Savings"),
