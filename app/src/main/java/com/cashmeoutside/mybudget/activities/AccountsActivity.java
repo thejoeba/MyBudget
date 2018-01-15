@@ -65,6 +65,7 @@ public class AccountsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // TODO: 1/15/2018 if using subscription method, be sure to remove listner when activity closed
 //        mAccountsSubscription.cancel();
     }
 
