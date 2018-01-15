@@ -20,7 +20,8 @@ import java.util.List;
 import io.objectbox.Box;
 
 public class AccountsActivity extends AppCompatActivity {
-
+    private Box<Account> mAccountBox;
+    // TODO: 1/15/2018 make this private!
     List<Account> accounts = new ArrayList<>();
 
     @Override
@@ -28,11 +29,8 @@ public class AccountsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accounts);
 
-//        accounts.add(new Account(0,"Cabrillo CU - Checking", "19182180", 0, Account.AccountTypeEnum.CHECKING.toString()));
-//        accounts.add(new Account(0, "Cabrillo CU - Savings", "19182181", 0, Account.AccountTypeEnum.SAVINGS.toString()));
-
-        Box accountBox = MyBudgetApplication.getBoxStore().boxFor(Account.class);
-        accounts.addAll(accountBox.getAll());
+        mAccountBox = MyBudgetApplication.getBoxStore().boxFor(Account.class);
+        accounts.addAll(mAccountBox.getAll());
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView rvAccounts = findViewById(R.id.rvAccounts);
@@ -54,16 +52,12 @@ public class AccountsActivity extends AppCompatActivity {
 
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
-                String result = data.getStringExtra("result");
-                String[] results = result.split(",");
-                Double balance = Double.parseDouble(results[2]);
-                accounts.add(new Account(0, results[0], results[1], balance, results[3]));
+                // TODO: 1/15/2018 This will clear all accounts from the list, and rebuild it.
+                accounts.clear();
+                accounts.addAll(mAccountBox.getAll());
 
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-                RecyclerView rvAccounts = findViewById(R.id.rvAccounts);
-                rvAccounts.setLayoutManager(layoutManager);
-                RecyclerView.Adapter adapter = new AccountsAdapter(accounts);
-                rvAccounts.setAdapter(adapter);
+                // TODO: 1/15/2018 You need to then tell the UI to refresh the list. You don't have an activity level adapter, so the next line doesn't currently work
+//                mAdapter.notifyDataSetChanged();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
