@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.cashmeoutside.mybudget.R;
 
-public class TransactionActivity extends AppCompatActivity {
+public class TransactionsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
