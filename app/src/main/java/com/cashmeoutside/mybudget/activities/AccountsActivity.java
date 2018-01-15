@@ -2,8 +2,8 @@ package com.cashmeoutside.mybudget.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -18,11 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.objectbox.Box;
+import io.objectbox.android.AndroidScheduler;
+import io.objectbox.query.Query;
+import io.objectbox.reactive.DataObserver;
+import io.objectbox.reactive.DataSubscriptionList;
 
 public class AccountsActivity extends AppCompatActivity {
     private Box<Account> mAccountBox;
-    // TODO: 1/15/2018 make this private!
-    List<Account> accounts = new ArrayList<>();
+    private List<Account> mAccounts = new ArrayList<>();
+    RecyclerView.Adapter mAdapter;
+//    private DataSubscriptionList mAccountsSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +35,23 @@ public class AccountsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_accounts);
 
         mAccountBox = MyBudgetApplication.getBoxStore().boxFor(Account.class);
-        accounts.addAll(mAccountBox.getAll());
+
+        // TODO: 1/15/2018 listen for changes to accounts via Observer instead of only getting changes from activity result
+//        Query<Account> accountsQuery = mAccountBox.query().build();
+//        accountsQuery.subscribe(mAccountsSubscription).on(AndroidScheduler.mainThread()).observer(new DataObserver<List<Account>>() {
+//            @Override
+//            public void onData(List<Account> accounts) {
+//                refreshAccountsList();
+//            }
+//        });
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView rvAccounts = findViewById(R.id.rvAccounts);
         rvAccounts.setLayoutManager(layoutManager);
-        RecyclerView.Adapter adapter = new AccountsAdapter(accounts);
-        rvAccounts.setAdapter(adapter);
+        mAdapter = new AccountsAdapter(mAccounts);
+        rvAccounts.setAdapter(mAdapter);
+
+        refreshAccountsList();
 
         Button btnNewTransaction = findViewById(R.id.btnNewTransaction);
         btnNewTransaction.setOnClickListener(new View.OnClickListener() {
@@ -48,20 +63,26 @@ public class AccountsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        mAccountsSubscription.cancel();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
-                // TODO: 1/15/2018 This will clear all accounts from the list, and rebuild it.
-                accounts.clear();
-                accounts.addAll(mAccountBox.getAll());
-
-                // TODO: 1/15/2018 You need to then tell the UI to refresh the list. You don't have an activity level adapter, so the next line doesn't currently work
-//                mAdapter.notifyDataSetChanged();
+                refreshAccountsList();
             }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
-            }
+            if (resultCode == Activity.RESULT_CANCELED) {}
         }
+    }
+
+    private void refreshAccountsList() {
+        // TODO: 1/15/2018 This will clear all mAccounts from the list, and rebuild it.
+        mAccounts.clear();
+        mAccounts.addAll(mAccountBox.getAll());
+        mAdapter.notifyDataSetChanged();
     }
 }
