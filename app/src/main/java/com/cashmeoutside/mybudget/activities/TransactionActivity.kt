@@ -1,7 +1,8 @@
-package com.cashmeoutside.mybudget
+package com.cashmeoutside.mybudget.activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.cashmeoutside.mybudget.R
 
 class TransactionActivity : AppCompatActivity() {
 

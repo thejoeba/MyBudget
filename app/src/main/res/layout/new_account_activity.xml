@@ -55,7 +55,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvAccountNameLabel"
             tools:text="Account Name"
-            android:text="@{account.name}" />
+            android:text="@={account.name}" />
 
         <TextView
             android:id="@+id/tvAccountNumberLabel"
@@ -81,8 +81,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvAccountNumberLabel"
-            tools:text="Account Number"
-            android:text="@{account.accountNumber}" />
+            tools:text="Account Number"/>
+            <!--android:text="@{account.accountNumber}" />-->
 
         <TextView
             android:id="@+id/tvAccountTypeLabel"

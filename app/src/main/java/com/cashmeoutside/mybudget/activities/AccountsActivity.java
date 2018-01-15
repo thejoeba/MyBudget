@@ -1,4 +1,4 @@
-package com.cashmeoutside.mybudget;
+package com.cashmeoutside.mybudget.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,11 +9,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
+import com.cashmeoutside.mybudget.MyBudgetApplication;
+import com.cashmeoutside.mybudget.R;
 import com.cashmeoutside.mybudget.adapters.AccountsAdapter;
 import com.cashmeoutside.mybudget.entities.Account;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.objectbox.Box;
 
 public class AccountsActivity extends AppCompatActivity {
 
@@ -24,8 +28,11 @@ public class AccountsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accounts);
 
-        accounts.add(new Account(0,"Cabrillo CU - Checking", "19182180", 0, Account.AccountTypeEnum.CHECKING.toString()));
-        accounts.add(new Account(0, "Cabrillo CU - Savings", "19182181", 0, Account.AccountTypeEnum.SAVINGS.toString()));
+//        accounts.add(new Account(0,"Cabrillo CU - Checking", "19182180", 0, Account.AccountTypeEnum.CHECKING.toString()));
+//        accounts.add(new Account(0, "Cabrillo CU - Savings", "19182181", 0, Account.AccountTypeEnum.SAVINGS.toString()));
+
+        Box accountBox = MyBudgetApplication.getBoxStore().boxFor(Account.class);
+        accounts.addAll(accountBox.getAll());
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView rvAccounts = findViewById(R.id.rvAccounts);

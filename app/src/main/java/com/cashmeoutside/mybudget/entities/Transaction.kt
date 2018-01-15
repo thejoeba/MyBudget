@@ -2,4 +2,4 @@ package com.cashmeoutside.mybudget.entities
 
 import java.util.*
 
-class Transaction(TransactionDate: Date, Vendor: String, Amount: Double, Category: String, Account: String)
+class Transaction(var id: Long = 0, var TransactionDate: Date, var Vendor: String, var Amount: Double, var Category: String, var Account: String)
