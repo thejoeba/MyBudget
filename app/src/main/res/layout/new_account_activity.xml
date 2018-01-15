@@ -146,10 +146,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@android:color/holo_orange_dark"
+            android:onClick="onSave"
             android:text="Save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btnCancelAddNewAccount" />
+            app:layout_constraintStart_toEndOf="@+id/btnCancelAddNewAccount"/>
 
         <Button
             android:id="@+id/btnCancelAddNewAccount"
@@ -157,10 +158,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@android:color/holo_orange_light"
+            android:onClick="onCancel"
             android:text="Cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnSaveAddNewAccount"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
 </layout>

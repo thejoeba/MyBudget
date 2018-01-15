@@ -34,32 +34,18 @@ public class NewAccountActivity extends AppCompatActivity {
 
         Spinner spinAccountType = findViewById(R.id.spinAccountType);
         spinAccountType.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Account.AccountTypeEnum.values()));
-
-        Button btnSaveAddNewAccount = findViewById(R.id.btnSaveAddNewAccount);
-        btnSaveAddNewAccount.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                onSave();
-            }
-        });
-
-        Button btnCancelAddNewAccount = findViewById(R.id.btnCancelAddNewAccount);
-        btnCancelAddNewAccount.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent returnIntent = new Intent();
-                setResult(Activity.RESULT_CANCELED, returnIntent);
-                finish();
-            }
-        });
-
     }
 
-    public void onSave() {
-        //Save to objectBox
-        Box accountBox = MyBudgetApplication.getBoxStore().boxFor(Account.class);
-
+    public void onSave(View v) {
+        Box<Account> accountBox = MyBudgetApplication.getBoxStore().boxFor(Account.class);
         accountBox.put(mAccount);
 
         setResult(Activity.RESULT_OK);
+        finish();
+    }
+
+    public void onCancel(View v) {
+        setResult(Activity.RESULT_CANCELED);
         finish();
     }
 
