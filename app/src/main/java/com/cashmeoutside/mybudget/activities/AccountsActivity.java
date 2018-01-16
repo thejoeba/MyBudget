@@ -26,7 +26,7 @@ public class AccountsActivity extends AppCompatActivity {
     private Box<Account> mAccountBox;
     private List<Account> mAccounts = new ArrayList<>();
     RecyclerView.Adapter mAdapter;
-    private DataSubscriptionList mAccountsSubscription;
+    private DataSubscriptionList mAccountsSubscription = new DataSubscriptionList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,39 @@ public class AccountsActivity extends AppCompatActivity {
         accountsQuery.subscribe(mAccountsSubscription).on(AndroidScheduler.mainThread()).observer(new DataObserver<List<Account>>() {
             @Override
             public void onData(List<Account> accounts) {
-                refreshAccountsList();
+                for (int i = 0; i < mAccounts.size(); i++) {
+                    Account oldAccount = mAccounts.get(i);
+                    boolean match = false;
+                    for (Account newAccount : accounts) {
+                        if (oldAccount.getId() == newAccount.getId()) {
+                            match = true;
+                            if (oldAccount.equals(newAccount)) {
+                                mAccounts.set(i, newAccount);
+                                mAdapter.notifyItemChanged(i);
+                            }
+                            break;
+                        }
+                    }
+                    if (!match) {
+                        mAccounts.remove(i);
+                        mAdapter.notifyItemRemoved(i);
+                    }
+                }
+
+                for (int i = 0; i < accounts.size(); i++) {
+                    Account newAccount = accounts.get(i);
+                    boolean match = false;
+                    for (Account oldAccount : mAccounts) {
+                        if (oldAccount.getId() == newAccount.getId()) {
+                            match = true;
+                        }
+                    }
+                    if (!match) {
+                        mAccounts.add(i, newAccount);
+                        mAdapter.notifyItemInserted(i);
+                    }
+                }
+//                refreshAccountsList();
             }
         });
 
@@ -54,7 +86,9 @@ public class AccountsActivity extends AppCompatActivity {
         Button btnNewTransaction = findViewById(R.id.btnNewTransaction);
         btnNewTransaction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(AccountsActivity.this, NewAccountActivity.class));
+                // TODO: 1/15/2018 Remove this, it is just to show adding is pretty
+                mAccountBox.put(new Account(0, "Test " + mAccounts.size(), "", 0, ""));
+//                startActivity(new Intent(AccountsActivity.this, NewAccountActivity.class));
                             }
         });
     }
@@ -62,7 +96,9 @@ public class AccountsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mAccountsSubscription.cancel();
+        if (mAccountsSubscription != null) {
+            mAccountsSubscription.cancel();
+        }
     }
 
     private void refreshAccountsList() {
