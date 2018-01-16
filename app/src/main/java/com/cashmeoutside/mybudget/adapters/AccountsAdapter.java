@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cashmeoutside.mybudget.BR;
+import com.cashmeoutside.mybudget.MyBudgetApplication;
 import com.cashmeoutside.mybudget.R;
 import com.cashmeoutside.mybudget.entities.Account;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.objectbox.Box;
 
 public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.AccountViewHolder>{
 
@@ -24,8 +27,7 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
 
     @Override
     public AccountViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.cardview_account, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_account, parent, false);
         return new AccountViewHolder(v);
     }
 
@@ -40,13 +42,29 @@ public class AccountsAdapter extends RecyclerView.Adapter<AccountsAdapter.Accoun
         return mAccounts.size();
     }
 
-    public class AccountViewHolder extends RecyclerView.ViewHolder{
+    public class AccountViewHolder extends RecyclerView.ViewHolder {
 
         private ViewDataBinding binding;
 
         public AccountViewHolder(View view){
             super(view);
             binding = DataBindingUtil.bind(view);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO: 1/15/2018 Remove this, it is just to show that updating and deleting can be pretty
+                    Box<Account> accountBox = MyBudgetApplication.getBoxStore().boxFor(Account.class);
+                    Account account = mAccounts.get(getAdapterPosition());
+                    if (account.getBalance() == 0) {
+                        account.setName("Updated");
+                        account.setBalance(1);
+                        accountBox.put(account);
+                    } else {
+                        accountBox.remove(account);
+                    }
+                }
+            });
         }
 
         public ViewDataBinding getBinding() {
