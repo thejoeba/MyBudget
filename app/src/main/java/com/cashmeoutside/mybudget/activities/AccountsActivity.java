@@ -1,6 +1,5 @@
 package com.cashmeoutside.mybudget.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +26,7 @@ public class AccountsActivity extends AppCompatActivity {
     private Box<Account> mAccountBox;
     private List<Account> mAccounts = new ArrayList<>();
     RecyclerView.Adapter mAdapter;
-//    private DataSubscriptionList mAccountsSubscription;
+    private DataSubscriptionList mAccountsSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +35,13 @@ public class AccountsActivity extends AppCompatActivity {
 
         mAccountBox = MyBudgetApplication.getBoxStore().boxFor(Account.class);
 
-        // TODO: 1/15/2018 listen for changes to accounts via Observer instead of only getting changes from activity result
-//        Query<Account> accountsQuery = mAccountBox.query().build();
-//        accountsQuery.subscribe(mAccountsSubscription).on(AndroidScheduler.mainThread()).observer(new DataObserver<List<Account>>() {
-//            @Override
-//            public void onData(List<Account> accounts) {
-//                refreshAccountsList();
-//            }
-//        });
+        Query<Account> accountsQuery = mAccountBox.query().build();
+        accountsQuery.subscribe(mAccountsSubscription).on(AndroidScheduler.mainThread()).observer(new DataObserver<List<Account>>() {
+            @Override
+            public void onData(List<Account> accounts) {
+                refreshAccountsList();
+            }
+        });
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView rvAccounts = findViewById(R.id.rvAccounts);
@@ -56,8 +54,7 @@ public class AccountsActivity extends AppCompatActivity {
         Button btnNewTransaction = findViewById(R.id.btnNewTransaction);
         btnNewTransaction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivityForResult(new Intent(AccountsActivity.this,
-                        NewAccountActivity.class), 1);
+                startActivity(new Intent(AccountsActivity.this, NewAccountActivity.class));
                             }
         });
     }
@@ -65,23 +62,10 @@ public class AccountsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // TODO: 1/15/2018 if using subscription method, be sure to remove listner when activity closed
-//        mAccountsSubscription.cancel();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK){
-                refreshAccountsList();
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {}
-        }
+        mAccountsSubscription.cancel();
     }
 
     private void refreshAccountsList() {
-        // TODO: 1/15/2018 This will clear all mAccounts from the list, and rebuild it.
         mAccounts.clear();
         mAccounts.addAll(mAccountBox.getAll());
         mAdapter.notifyDataSetChanged();
